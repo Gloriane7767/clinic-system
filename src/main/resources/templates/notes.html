@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Appointment Notes</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f0f4f8; }
+        .navbar {
+            background: #185FA5; color: white;
+            padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .navbar a { color: white; text-decoration: none; margin-left: 1rem; }
+        .content { padding: 2rem; max-width: 800px; }
+        .note-card {
+            background: white; border-radius: 10px;
+            padding: 1rem 1.25rem; margin-bottom: 1rem;
+            border: 1px solid #e0e0e0;
+        }
+        .note-card .author { font-weight: bold; color: #185FA5; }
+        .note-card .date   { font-size: 12px; color: #999; margin-left: 8px; }
+        .note-card .text   { margin-top: 8px; color: #333; }
+        .add-note {
+            background: white; border-radius: 10px;
+            padding: 1.25rem; margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+        }
+        input, textarea {
+            width: 100%; padding: 10px; margin-bottom: 1rem;
+            border: 1px solid #ccc; border-radius: 6px;
+            box-sizing: border-box; font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+        textarea { height: 100px; resize: vertical; }
+        button {
+            padding: 10px 24px; background: #185FA5;
+            color: white; border: none; border-radius: 6px;
+            font-size: 14px; cursor: pointer;
+        }
+        .delete-btn {
+            float: right; background: #e24b4a;
+            padding: 4px 12px; font-size: 12px;
+        }
+        .empty { color: #999; font-style: italic; }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <span>Appointment Notes</span>
+    <div>
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+</div>
+
+<div class="content">
+    <h2>Notes for Appointment #<span th:text="${appointmentId}"></span></h2>
+
+    <!-- Add new note form -->
+    <div class="add-note">
+        <h3 style="margin-top:0">Add a Note</h3>
+        <input type="text" id="authorName" placeholder="Your name" />
+        <textarea id="noteText" placeholder="Write your note here..."></textarea>
+        <button onclick="addNote()">Save Note</button>
+    </div>
+
+    <!-- List of existing notes -->
+    <div id="notes-list">
+        <p class="empty">Loading notes...</p>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const appointmentId = [[${appointmentId}]];
+
+    // Load notes when the page opens
+    async function loadNotes() {
+        const res   = await fetch(`/api/appointments/${appointmentId}/notes`);
+        const notes = await res.json();
+        const list  = document.getElementById('notes-list');
+
+        if (notes.length === 0) {
+            list.innerHTML = '<p class="empty">No notes yet. Add one above.</p>';
+            return;
+        }
+
+        list.innerHTML = notes.map(note => `
+                <div class="note-card" id="note-${note.id}">
+                    <button class="delete-btn" onclick="deleteNote('${note.id}')">Delete</button>
+                    <span class="author">${note.authorName}</span>
+                    <span class="date">${new Date(note.createdAt).toLocaleString()}</span>
+                    <div class="text">${note.noteText}</div>
+                </div>
+            `).join('');
+    }
+
+    // Add a new note
+    async function addNote() {
+        const authorName = document.getElementById('authorName').value.trim();
+        const noteText   = document.getElementById('noteText').value.trim();
+
+        if (!authorName || !noteText) {
+            alert('Please fill in both your name and the note.');
+            return;
+        }
+
+        await fetch(`/api/appointments/${appointmentId}/notes`, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ authorName, noteText })
+        });
+
+        // Clear the form and reload notes
+        document.getElementById('authorName').value = '';
+        document.getElementById('noteText').value   = '';
+        loadNotes();
+    }
+
+    // Delete a note
+    async function deleteNote(noteId) {
+        if (!confirm('Delete this note?')) return;
+        await fetch(`/api/appointments/${appointmentId}/notes/${noteId}`, {
+            method: 'DELETE'
+        });
+        loadNotes();
+    }
+
+    loadNotes();
+</script>
+</body>
+</html>

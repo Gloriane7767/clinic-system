@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Prescriptions</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Prescriptions</h1>
+<a th:href="@{/dashboard}">← Back to Dashboard</a>
+
+<table border="1" cellpadding="8">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Appointment ID</th>
+            <th>Medication</th>
+            <th>Dosage</th>
+            <th>Instructions</th>
+            <th>Issued Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="p : ${prescriptions}">
+            <td th:text="${p.id}"></td>
+            <td th:text="${p.appointment.id}"></td>
+            <td th:text="${p.medication}"></td>
+            <td th:text="${p.dosage}"></td>
+            <td th:text="${p.instructions}"></td>
+            <td th:text="${p.issuedDate}"></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

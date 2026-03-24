@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller  // Tells Spring: this class handles web page requests
 public class DashboardController {
-    @Autowired  // Spring automatically injects these repositories
+    @Autowired
     private PatientRepository     patientRepository;
     @Autowired
     private DoctorRepository      doctorRepository;
@@ -31,15 +32,15 @@ public class DashboardController {
         return "patients";
     }
 
-    @GetMapping("/doctors")
-    public String doctors(Model model) {
-        model.addAttribute("doctors", doctorRepository.findAll());
-        return "doctors";
-    }
-
     @GetMapping("/appointments")
     public String appointments(Model model) {
         model.addAttribute("appointments", appointmentRepository.findAll());
         return "appointments";
+    }
+
+    @GetMapping("/appointments/{appointmentId}/notes")
+    public String appointmentNotes(@PathVariable Long appointmentId, Model model) {
+        model.addAttribute("appointmentId", appointmentId);
+        return "notes";  // loads notes.html
     }
 }
