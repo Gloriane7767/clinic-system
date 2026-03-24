@@ -33,6 +33,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/css/**", "/js/**",
+                                "/search-doctors",
                                 "/swagger-ui/**", "/v3/api-docs/**").permitAll() // These pages are public
                         .anyRequest().authenticated()                               // Everything else needs login
                 )

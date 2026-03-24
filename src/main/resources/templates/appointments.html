@@ -26,7 +26,7 @@
     </div>
 </div>
 <div class="content">
-    <h2>Appointments</h2>
+    <h2 th:text="${doctorId != null} ? 'Appointments for Doctor #' + ${doctorId} : 'All Appointments'">Appointments</h2>
     <table>
         <thead>
             <tr><th>ID</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Status</th></tr>

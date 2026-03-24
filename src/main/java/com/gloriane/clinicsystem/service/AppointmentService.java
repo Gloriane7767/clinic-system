@@ -25,6 +25,10 @@ public class AppointmentService {
         return appointmentRepository.save(appointment);
     }
 
+    public List<Appointment> getByDoctorId(Long doctorId) {
+        return appointmentRepository.findByDoctorId(doctorId);
+    }
+
     public boolean exists(Long id) {
         return appointmentRepository.existsById(id);
     }

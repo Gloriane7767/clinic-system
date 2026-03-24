@@ -29,6 +29,10 @@ public class DoctorService {
         doctorRepository.deleteById(id);
     }
 
+    public List<Doctor> searchByName(String name) {
+        return doctorRepository.findByNameContainingIgnoreCase(name);
+    }
+
     public boolean exists(Long id) {
         return doctorRepository.existsById(id);
     }
