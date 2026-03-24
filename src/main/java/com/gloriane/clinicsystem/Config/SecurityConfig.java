@@ -32,7 +32,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/css/**", "/js/**").permitAll() // These pages are public
+                        .requestMatchers("/login", "/css/**", "/js/**",
+                                "/swagger-ui/**", "/v3/api-docs/**").permitAll() // These pages are public
                         .anyRequest().authenticated()                               // Everything else needs login
                 )
                 .formLogin(form -> form

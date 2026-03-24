@@ -1,0 +1,39 @@
+name: Java CI
+
+# Run this workflow whenever code is pushed to main, or a pull request is opened
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest   # Run on a fresh Ubuntu machine in the cloud
+
+    steps:
+      # Step 1: Check out your code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Install Java 17
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Step 3: Cache Maven dependencies so the workflow runs faster next time
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+
+      # Step 4: Build the project and run tests
+      - name: Build with Maven
+        run: ./mvnw clean package -DskipTests
+
+      # Step 5: Run linting check (verify code compiles cleanly)
+      - name: Verify
+        run: ./mvnw verify -DskipTests

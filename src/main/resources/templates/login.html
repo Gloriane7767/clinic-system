@@ -46,11 +46,11 @@
 <div class="card">
     <h2>Clinic Management System</h2>
     <!-- Show error message if login failed -->
-    <p class="error" th:if="${error}" th:text="${error}"></p>
+    <p class="error" th:if="${param.error}">Invalid email or password.</p>
 
     <form th:action="@{/login}" method="post">
-        <input type="text"     name="username"    placeholder="UserName"    required />
-        <input type="password" name="password" placeholder="Password" required />
+        <input type="email" name="email" />   <!-- must be name="email" -->
+        <input type="password" name="password" />
         <button type="submit">Login</button>
     </form>
 </div>

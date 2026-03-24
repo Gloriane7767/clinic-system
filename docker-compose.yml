@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+
+  # Your MySQL database as a container
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_DATABASE: clinic_db
+    ports:
+      - "3307:3306"   # Maps container port 3306 to your machine's 3307
+    volumes:
+      - clinic-data:/var/lib/mysql   # Saves database data even if container restarts
+
+  # Your Spring Boot app as a container
+  app:
+    build: .           # Build using your Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/clinic_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root1234
+    depends_on:
+      - db             # Wait for the database to start before starting the app
+
+volumes:
+  clinic-data:
