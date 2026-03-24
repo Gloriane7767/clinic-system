@@ -26,9 +26,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
 
         // Build the provider inline — avoids circular bean dependency
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(passwordEncoder);
+        provider.setUserDetailsService((org.springframework.security.core.userdetails.UserDetailsService) userDetailsService);
 
         http
             .authenticationProvider(provider)
