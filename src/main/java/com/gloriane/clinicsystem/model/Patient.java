@@ -24,5 +24,8 @@ public class Patient {
 
     private String phone;
 
-    private LocalDate dob;                      // Date of birth
+    private LocalDate dob;
+
+    @Column(nullable = false)
+    private String password = "patient123"; // default, should be changed on first login
 }

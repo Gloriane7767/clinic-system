@@ -26,4 +26,7 @@ public class Doctor {
     private String specialty;
 
     private String phone;
+
+    @Column(nullable = false)
+    private String password = "doctor123"; // default, should be changed on first login
 }

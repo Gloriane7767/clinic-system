@@ -16,10 +16,12 @@
             background: white;
             padding: 2rem;
             border-radius: 10px;
-            width: 340px;
+            width: 360px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        h2 { color: #185FA5; margin-bottom: 1.5rem; }
+        h2 { color: #185FA5; margin-bottom: 0.3rem; }
+        .subtitle { color: #888; font-size: 13px; margin-bottom: 1.5rem; }
+        label { font-size: 13px; color: #555; display: block; margin-bottom: 4px; }
         input {
             width: 100%;
             padding: 10px;
@@ -39,20 +41,38 @@
             font-size: 15px;
             cursor: pointer;
         }
+        button:hover { background: #1450a0; }
         .error { color: red; font-size: 13px; margin-bottom: 1rem; }
+        .roles {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            color: #999;
+        }
+        .roles span { display: block; margin-bottom: 3px; }
     </style>
 </head>
 <body>
 <div class="card">
     <h2>Clinic Management System</h2>
-    <!-- Show error message if login failed -->
+    <p class="subtitle">Sign in with your email and password</p>
+
     <p class="error" th:if="${param.error}">Invalid email or password.</p>
 
     <form th:action="@{/login}" method="post">
-        <input type="email" name="email" />   <!-- must be name="email" -->
-        <input type="password" name="password" />
-        <button type="submit">Login</button>
+        <label>Email</label>
+        <input type="email" name="email" placeholder="you@example.com" required autofocus />
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Password" required />
+        <button type="submit">Sign In</button>
     </form>
+
+    <div class="roles">
+        <span>Admin → goes to Dashboard</span>
+        <span>Doctor → goes to your Appointments</span>
+        <span>Patient → goes to Doctor Search</span>
+    </div>
 </div>
 </body>
 </html>
